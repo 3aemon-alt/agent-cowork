@@ -17,28 +17,26 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 22
+          cache: 'npm'
 
       - name: Install Dependencies
-        run: bun install
+        run: npm install
 
       - name: Build and Package
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [ "${{ matrix.os }}" = "macos-latest" ]; then
-            bun run build
-            bun run dist:mac-arm64
-            bun run dist:mac-x64
+            npm run dist:mac-arm64
+            npm run dist:mac-x64
           elif [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
-            bun run build
-            bun run dist:linux
+            npm run dist:linux
           elif [ "${{ matrix.os }}" = "windows-latest" ]; then
-            bun run build
-            bun run dist:win
+            npm run dist:win
           fi
         shell: bash
 
@@ -48,7 +46,6 @@ jobs:
           files: |
             dist/*.dmg
             dist/*.exe
-            dist/*.deb
             dist/*.AppImage
             dist/*.zip
         env:
