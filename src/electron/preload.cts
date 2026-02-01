@@ -1,7 +1,7 @@
 import electron from "electron";
 
 electron.contextBridge.exposeInMainWorld("electron", {
-    subscribeStatistics: (callback) =>
+    subscribeStatistics: (callback: (statistics: any) => void) =>
         ipcOn("statistics", stats => {
             callback(stats);
         }),
@@ -33,9 +33,13 @@ electron.contextBridge.exposeInMainWorld("electron", {
         ipcInvoke("get-api-config"),
     saveApiConfig: (config: any) =>
         ipcInvoke("save-api-config", config),
+    checkApiConfig: () =>
+        ipcInvoke("check-api-config"),
     setNativeTheme: (theme: "light" | "dark" | "system") => {
         electron.ipcRenderer.send("set-native-theme", theme);
-    }
+    },
+    readFile: (filePath: string) => ipcInvoke("read-file", filePath),
+    saveFile: (content: string, defaultPath?: string) => ipcInvoke("save-file", { content, defaultPath }),
 })
 
 function ipcInvoke<Key extends keyof EventPayloadMapping>(key: Key, ...args: any[]): Promise<EventPayloadMapping[Key]> {
