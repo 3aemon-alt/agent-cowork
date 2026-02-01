@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useAppStore } from "../store/useAppStore";
+import { Download, Upload } from "lucide-react";
 
 interface SidebarProps {
   connected: boolean;
@@ -67,9 +68,78 @@ export function Sidebar({
     }, 3000);
   };
 
+  const handleExportSession = async (sessionId: string) => {
+    const session = sessions[sessionId];
+    if (!session) return;
+
+    const data = JSON.stringify(session, null, 2);
+    try {
+      const result = await window.electron.saveFile(data, `${session.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.json`);
+      if (result.success) {
+        // Toast success?
+      }
+    } catch (e) {
+      console.error("Failed to export session", e);
+    }
+  };
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !(file as any).path) return;
+
+    try {
+      const result = await window.electron.readFile((file as any).path);
+      if (result.success && result.data) {
+        try {
+          const sessionData = JSON.parse(result.data.content);
+          // Validate if it has generic session structure
+          if (sessionData.id && sessionData.messages) {
+            // Generate a new ID to avoid collision if importing same session
+            const newId = crypto.randomUUID();
+            const newSession = {
+              ...sessionData,
+              id: newId,
+              title: `${sessionData.title} (Imported)`,
+              updatedAt: Date.now(),
+              createdAt: Date.now(),
+              status: "idle" // Reset status
+            };
+
+            // Manually inject into store (we might need a store action for this)
+            // useAppStore.getState().injectSession(newSession); 
+            // Wait, we don't have injectSession. 
+            // We can't easily inject without a store action. 
+            // Ideally I should add `importSession` action to store.
+            // For now let's hack it or add the action. 
+            // Hacking direct state mutation is bad in Zustand outside of Set.
+
+            // Let's add the action to useAppStore first? 
+            // Or just use setState directly here if exposed? 
+            useAppStore.setState(state => ({
+              sessions: { ...state.sessions, [newId]: newSession }
+            }));
+            setActiveSessionId(newId);
+          }
+        } catch (err) {
+          console.error("Invalid JSON", err);
+        }
+      }
+    } catch (err) {
+      console.error("Import failed", err);
+    }
+    // Reset input
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
   return (
-    <aside className="fixed inset-y-0 left-0 flex h-full w-[280px] flex-col gap-4 border-r border-ink-900/5 bg-[#FAF9F6] px-4 pb-4 pt-12">
-      <div 
+    <aside className="fixed inset-y-0 left-0 flex h-full w-[280px] flex-col gap-4 border-r border-ink-900/5 bg-surface-cream px-4 pb-4 pt-12">
+      <div
         className="absolute top-0 left-0 right-0 h-12"
         style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}
       />
@@ -89,6 +159,23 @@ export function Sidebar({
             <circle cx="12" cy="12" r="3" />
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.08a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.08a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
           </svg>
+        </button>
+      </div>
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        className="hidden"
+        accept=".json"
+      />
+
+      <div className="px-2 pb-2">
+        <button
+          onClick={handleImportClick}
+          className="flex items-center justify-center gap-2 w-full rounded-lg border border-dashed border-ink-900/10 py-2 text-xs font-medium text-ink-500 hover:bg-surface-secondary hover:text-ink-700 transition-colors"
+        >
+          <Upload className="h-3 w-3" />
+          Import Session
         </button>
       </div>
       <div className="flex flex-col gap-2 overflow-y-auto">
@@ -138,6 +225,10 @@ export function Sidebar({
                         <path d="M4 5h16v14H4z" /><path d="M7 9h10M7 12h6" /><path d="M13 15l3 2-3 2" />
                       </svg>
                       Resume in Claude Code
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item className="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm text-ink-700 outline-none hover:bg-ink-900/5" onSelect={() => handleExportSession(session.id)}>
+                      <Download className="h-4 w-4 text-ink-500" />
+                      Export JSON
                     </DropdownMenu.Item>
                   </DropdownMenu.Content>
                 </DropdownMenu.Portal>

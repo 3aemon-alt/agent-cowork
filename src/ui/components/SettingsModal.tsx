@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { MessageSquarePlus } from "lucide-react";
+import { PromptLibraryModal } from "./PromptLibraryModal";
 
 import { useAppStore } from "../store/useAppStore";
 
@@ -15,7 +17,9 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   const [success, setSuccess] = useState(false);
+  const [showPromptLibrary, setShowPromptLibrary] = useState(false);
 
   useEffect(() => {
     // 加载当前配置
@@ -168,6 +172,14 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </div>
             </label>
 
+            <button
+              onClick={() => setShowPromptLibrary(true)}
+              className="flex items-center justify-center gap-2 w-full rounded-xl border border-dashed border-ink-900/20 py-2.5 text-sm font-medium text-ink-600 hover:bg-surface-secondary hover:border-ink-900/30 transition-all"
+            >
+              <MessageSquarePlus className="h-4 w-4" />
+              Manage Prompt Library
+            </button>
+
             {error && (
               <div className="rounded-xl border border-error/20 bg-error-light px-4 py-2.5 text-sm text-error">
                 {error}
@@ -204,6 +216,10 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           </div>
         )}
       </div>
+
+      {showPromptLibrary && (
+        <PromptLibraryModal onClose={() => setShowPromptLibrary(false)} />
+      )}
     </div>
   );
 }

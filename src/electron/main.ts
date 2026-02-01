@@ -1,5 +1,7 @@
 import { app, BrowserWindow, ipcMain, dialog, globalShortcut, Menu, nativeTheme } from "electron"
 import { execSync } from "child_process";
+import fs from "fs";
+import path from "path";
 import { ipcMainHandle, isDev, DEV_PORT } from "./util.js";
 import { getPreloadPath, getUIPath, getIconPath } from "./pathResolver.js";
 import { getStaticData, pollResources, stopPolling } from "./test.js";
@@ -132,6 +134,50 @@ app.on("ready", () => {
     ipcMainHandle("save-api-config", (_: any, config: any) => {
         try {
             saveApiConfig(config);
+            return { success: true };
+        } catch (error) {
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : String(error)
+            };
+        }
+    });
+
+    ipcMainHandle("read-file", async (_: any, filePath: string) => {
+        try {
+            const stats = await fs.promises.stat(filePath);
+            if (stats.size > 2 * 1024 * 1024) { // 2MB limit
+                return { success: false, error: "File too large (max 2MB)" };
+            }
+            const content = await fs.promises.readFile(filePath, "utf-8");
+            return {
+                success: true,
+                data: {
+                    name: path.basename(filePath),
+                    content,
+                    path: filePath
+                }
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : String(error)
+            };
+        }
+    });
+
+    ipcMainHandle("save-file", async (_: any, { content, defaultPath }: { content: string; defaultPath?: string }) => {
+        try {
+            const { filePath } = await dialog.showSaveDialog(mainWindow!, {
+                defaultPath,
+                properties: ['showOverwriteConfirmation', 'createDirectory']
+            });
+
+            if (!filePath) {
+                return { success: false, error: "Cancelled" };
+            }
+
+            await fs.promises.writeFile(filePath, content, "utf-8");
             return { success: true };
         } catch (error) {
             return {

@@ -1,7 +1,7 @@
 import electron from "electron";
 
 electron.contextBridge.exposeInMainWorld("electron", {
-    subscribeStatistics: (callback: (statistics: any) => void) =>
+    subscribeStatistics: (callback: (statistics: Statistics) => void) =>
         ipcOn("statistics", stats => {
             callback(stats);
         }),

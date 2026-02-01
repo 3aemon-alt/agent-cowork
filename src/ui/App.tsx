@@ -10,6 +10,7 @@ import { SettingsModal } from "./components/SettingsModal";
 import { PromptInput, usePromptActions } from "./components/PromptInput";
 import { MessageCard } from "./components/EventCard";
 import MDContent from "./render/markdown";
+import { CommandPalette } from "./components/CommandPalette";
 
 const SCROLL_THRESHOLD = 50;
 
@@ -268,8 +269,11 @@ function App() {
     resetToLatest();
   }, [resetToLatest]);
 
+
+
   return (
     <div className="flex h-screen bg-surface">
+      <CommandPalette />
       <Sidebar
         connected={connected}
         onNewSession={handleNewSession}

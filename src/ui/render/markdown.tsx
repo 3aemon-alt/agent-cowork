@@ -2,6 +2,7 @@ import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
+import { CodeBlock } from "../components/CodeBlock";
 
 export default function MDContent({ text }: { text: string }) {
   return (
@@ -19,10 +20,7 @@ export default function MDContent({ text }: { text: string }) {
         strong: (props) => <strong className="text-ink-900 font-semibold" {...props} />,
         em: (props) => <em className="text-ink-800" {...props} />,
         pre: (props) => (
-          <pre
-            className="mt-3 max-w-full overflow-x-auto whitespace-pre-wrap rounded-xl bg-surface-tertiary p-3 text-sm text-ink-700"
-            {...props}
-          />
+          <CodeBlock {...props} />
         ),
         code: (props) => {
           const { children, className, ...rest } = props;

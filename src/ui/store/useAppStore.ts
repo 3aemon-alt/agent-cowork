@@ -9,6 +9,12 @@ export type PermissionRequest = {
   input: unknown;
 };
 
+export type SavedPrompt = {
+  id: string;
+  title: string;
+  content: string;
+};
+
 export type SessionView = {
   id: string;
   title: string;
@@ -35,9 +41,14 @@ interface AppState {
   historyRequested: Set<string>;
   apiConfigChecked: boolean;
   theme: Theme;
+  prompts: SavedPrompt[];
 
   setTheme: (theme: Theme) => void;
   getEffectiveTheme: () => 'light' | 'dark';
+
+  addPrompt: (prompt: Omit<SavedPrompt, 'id'>) => void;
+  updatePrompt: (id: string, prompt: Partial<SavedPrompt>) => void;
+  removePrompt: (id: string) => void;
 
   setPrompt: (prompt: string) => void;
   setCwd: (cwd: string) => void;
@@ -69,6 +80,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   historyRequested: new Set(),
   apiConfigChecked: false,
   theme: (localStorage.getItem('theme') as Theme) || 'system',
+  prompts: JSON.parse(localStorage.getItem('prompts') || '[]'),
 
   setTheme: (theme) => {
     localStorage.setItem('theme', theme);
@@ -80,6 +92,23 @@ export const useAppStore = create<AppState>((set, get) => ({
       return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
     return theme;
+  },
+
+  addPrompt: (prompt) => {
+    const newPrompt = { ...prompt, id: crypto.randomUUID() };
+    const prompts = [...get().prompts, newPrompt];
+    localStorage.setItem('prompts', JSON.stringify(prompts));
+    set({ prompts });
+  },
+  updatePrompt: (id, updates) => {
+    const prompts = get().prompts.map(p => p.id === id ? { ...p, ...updates } : p);
+    localStorage.setItem('prompts', JSON.stringify(prompts));
+    set({ prompts });
+  },
+  removePrompt: (id) => {
+    const prompts = get().prompts.filter(p => p.id !== id);
+    localStorage.setItem('prompts', JSON.stringify(prompts));
+    set({ prompts });
   },
 
   setPrompt: (prompt) => set({ prompt }),

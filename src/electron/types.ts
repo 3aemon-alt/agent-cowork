@@ -30,6 +30,8 @@ export type EventPayloadMapping = {
   "save-api-config": any;
   statistics: any;
   "set-native-theme": "light" | "dark" | "system";
+  "read-file": string;
+  "save-file": { content: string; defaultPath?: string };
 };
 
 // Server -> Client events

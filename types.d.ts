@@ -22,6 +22,8 @@ type EventPayloadMapping = {
     "save-api-config": { success: boolean; error?: string };
     "check-api-config": { hasConfig: boolean; config: { apiKey: string; baseURL: string; model: string; apiType?: "anthropic" } | null };
     "set-native-theme": "light" | "dark" | "system";
+    "read-file": { success: boolean; data?: { name: string; content: string; path: string }; error?: string };
+    "save-file": { success: boolean; error?: string };
 }
 
 interface Window {
@@ -34,9 +36,11 @@ interface Window {
         generateSessionTitle: (userInput: string | null) => Promise<string>;
         getRecentCwds: (limit?: number) => Promise<string[]>;
         selectDirectory: () => Promise<string | null>;
+        checkApiConfig: () => Promise<{ hasConfig: boolean; config: { apiKey: string; baseURL: string; model: string; apiType?: "anthropic" } | null }>;
         getApiConfig: () => Promise<{ apiKey: string; baseURL: string; model: string; apiType?: "anthropic" } | null>;
         saveApiConfig: (config: { apiKey: string; baseURL: string; model: string; apiType?: "anthropic" }) => Promise<{ success: boolean; error?: string }>;
-        checkApiConfig: () => Promise<{ hasConfig: boolean; config: { apiKey: string; baseURL: string; model: string; apiType?: "anthropic" } | null }>;
         setNativeTheme: (theme: "light" | "dark" | "system") => void;
+        readFile: (filePath: string) => Promise<{ success: boolean; data?: { name: string; content: string; path: string }; error?: string }>;
+        saveFile: (content: string, defaultPath?: string) => Promise<{ success: boolean; error?: string }>;
     }
 }

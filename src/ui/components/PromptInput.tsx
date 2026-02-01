@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
+import { useDropzone } from "react-dropzone";
+import { Upload } from "lucide-react";
 import type { ClientEvent } from "../types";
 import { useAppStore } from "../store/useAppStore";
 
@@ -72,6 +74,30 @@ export function usePromptActions(sendEvent: (event: ClientEvent) => void) {
 export function PromptInput({ sendEvent, onSendMessage, disabled = false }: PromptInputProps) {
   const { prompt, setPrompt, isRunning, handleSend, handleStop } = usePromptActions(sendEvent);
   const promptRef = useRef<HTMLTextAreaElement | null>(null);
+  // const [isDragOver, setIsDragOver] = useState(false);
+
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    for (const file of acceptedFiles) {
+      if ((file as any).path) {
+        try {
+          const result = await window.electron.readFile((file as any).path);
+          if (result.success && result.data) {
+            const fileContext = `\n\n--- File: ${result.data.name} ---\n${result.data.content}\n------\n`;
+            setPrompt(useAppStore.getState().prompt + fileContext);
+          } else {
+            console.error("Failed to read file:", result.error);
+          }
+        } catch (err) {
+          console.error("Error reading file:", err);
+        }
+      }
+    }
+  }, [setPrompt]);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    noClick: true,
+  });
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (disabled && !isRunning) return;
@@ -120,7 +146,22 @@ export function PromptInput({ sendEvent, onSendMessage, disabled = false }: Prom
 
   return (
     <section className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-surface via-surface to-transparent pb-6 px-2 lg:pb-8 pt-8 lg:ml-[280px]">
-      <div className="mx-auto flex w-full max-w-full items-end gap-3 rounded-2xl border border-ink-900/10 bg-surface px-4 py-3 shadow-card lg:max-w-3xl">
+      <div
+        {...getRootProps()}
+        className={`mx-auto flex w-full max-w-full items-end gap-3 rounded-2xl border bg-surface px-4 py-3 shadow-card lg:max-w-3xl transition-all ${isDragActive
+          ? "border-accent border-2 bg-accent/5 ring-4 ring-accent/10 scale-[1.01]"
+          : "border-ink-900/10"
+          }`}
+      >
+        <input {...getInputProps()} />
+        {isDragActive && (
+          <div className="absolute inset-0 flex items-center justify-center rounded-2xl bg-surface/90 backdrop-blur-sm z-10 border-2 border-dashed border-accent">
+            <div className="flex flex-col items-center gap-2 text-accent animate-bounce-subtle">
+              <Upload className="h-8 w-8" />
+              <span className="font-semibold text-lg">Drop files to add context</span>
+            </div>
+          </div>
+        )}
         <textarea
           rows={1}
           className="flex-1 resize-none bg-transparent py-1.5 text-sm text-ink-800 placeholder:text-muted focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
