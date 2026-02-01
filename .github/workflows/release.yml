@@ -35,8 +35,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [ "${{ matrix.os }}" = "macos-latest" ]; then
-            npm run dist:mac-arm64
-            npm run dist:mac-x64
+            npm run dist:mac
           elif [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
             npm run dist:linux
           elif [ "${{ matrix.os }}" = "windows-latest" ]; then

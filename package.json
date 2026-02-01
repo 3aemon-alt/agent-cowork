@@ -13,8 +13,7 @@
 		"lint": "eslint .",
 		"preview": "vite preview",
 		"transpile:electron": "tsc --project src/electron/tsconfig.json",
-		"dist:mac-arm64": "npm run transpile:electron && npm run build && electron-builder --mac --arm64 -p never",
-		"dist:mac-x64": "npm run transpile:electron && npm run build && electron-builder --mac --x64 -p never",
+		"dist:mac": "npm run transpile:electron && npm run build && electron-builder --mac --arm64 --x64 -p never",
 		"dist:win": "npm run transpile:electron && npm run build && electron-builder --win --x64 -p never",
 		"dist:linux": "npm run transpile:electron && npm run build && electron-builder --linux --x64 -p never"
 	},
