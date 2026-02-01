@@ -1,154 +1,53 @@
-# Open Claude Cowork
+# 🤖 Open Claude Cowork
+> **คู่หู AI สำหรับการเขียนโปรแกรมยุคใหม่ (Agentic Coding) — เรียบง่าย ทรงพลัง และทำงานร่วมกันแบบ Real-time**
 
-<div align="center">
+---
 
-[![Version](https://img.shields.io/badge/version-0.0.2-blue.svg)](https://github.com/DevAgentForge/Claude-Cowork/releases)
-[![Platform](https://img.shields.io/badge/platform-%20macOS%20%7C%20Linux-lightgrey.svg)](https://github.com/DevAgentForge/Claude-Cowork/releases)
+## 🌟 ฟีเจอร์เด่น (Key Features)
 
-[简体中文](README_ZH.md)
+*   **🖥️ Native Desktop Experience:** ใช้งาน Claude Code ในรูปแบบแอปพลิเคชัน Desktop ที่สวยงาม ไม่ต้องพึ่งพา Terminal เพียงอย่างเดียว
+*   **🤝 AI Collaboration Partner:** ไม่ใช่แค่ GUI แต่เป็นคู่หูที่ช่วยคิด วางแผน และลงมือทำไปพร้อมกับคุณ
+*   **📂 Intelligent File Management:** จัดการไฟล์และโปรเจกต์ขนาดใหญ่ได้อย่างแม่นยำด้วยความสามารถของ Claude
+*   **⚙️ Zero Configuration:** เชื่อมต่อกับ `~/.claude/settings.json` เดิมของคุณได้ทันที ไม่ต้องตั้งค่าใหม่
+*   **🚀 Efficient Workflow:** ติดตามสถานะของ AI Agent ได้ทุกขั้นตอนผ่านหน้าจอที่ออกแบบมาเพื่อ Developer โดยเฉพาะ
 
-</div>
+---
 
-## ❤️ Collaboration
+## 💻 การติดตั้ง (Installation)
 
-[![MiniMax](assets/partners/minimax_banner.jpg)](https://platform.minimax.io/subscribe/coding-plan?code=5q2B2ljfdw&source=link)
+### 🍎 macOS
+1.  **ดาวน์โหลด Binary:** ไปที่ [Releases](https://github.com/DevAgentForge/agent-cowork/releases) และเลือกไฟล์ `.dmg`
+2.  **ลากเข้า Applications:** ติดตั้งตามขั้นตอนปกติของ macOS
+3.  **Authentication:** ตรวจสอบว่าคุณได้ทำ `claude login` ใน Terminal แล้ว
 
-MiniMax-M2.1 is an open-source SOTA model that excels at coding, navigating digital environments, and handling long, multi-step tasks.
-With Open Source Claude Cowork, M2.1 takes a concrete step toward our long-term vision of general-purpose productivity, making advanced AI capabilities accessible to everyone. 
+### 🐧 Linux
+1.  **ดาวน์โหลด Binary:** เลือกไฟล์ AppImage หรือแพ็กเกจที่เหมาะสมจากหน้า [Releases](https://github.com/DevAgentForge/agent-cowork/releases)
+2.  **ให้สิทธิ์รันไฟล์:** `chmod +x Claude-Cowork-x.x.x.AppImage`
+3.  **เริ่มใช้งาน:** รันแอปพลิเคชันผ่าน Terminal หรือ GUI
 
-[Click ](https://platform.minimax.io/subscribe/coding-plan?code=5q2B2ljfdw&source=link) to get an exclusive 12% off the MiniMax Coding Plan
+---
 
+## 🚀 วิธีการเริ่มต้นใช้งาน (Getting Started)
 
+1.  **เปิดแอปพลิเคชัน:** เริ่มต้น Open Claude Cowork จากเครื่องของคุณ
+2.  **สร้าง Task:** พิมพ์สิ่งที่ต้องการให้ AI ทำ เช่น *"ช่วยสร้างหน้า Login ด้วย Tailwind CSS"*
+3.  **เลือกเส้นทาง (Decision Making):** AI จะเสนอแนวทางจัดการไฟล์ คุณสามารถกดยอมรับหรือปรับแก้ได้ทันที
+4.  **Agentic Coding:** นั่งดู AI ลงมือเขียนโค้ด ทดสอบ และแก้ไขบั๊กให้คุณแบบอัตโนมัติ!
 
-## Agent Cowork
+---
 
-Agent Cowork is an open-source alternative to Claude Cowork — a desktop AI assistant that helps with programming, file management, and any task you can describe.
+## 🛠 ข้อมูลการพัฒนา (Development Info)
 
-> Not just a GUI.  
-> A real AI collaboration partner.  
-> No need to learn the Claude Agent SDK — just create tasks and choose execution paths.
+*   **เวอร์ชัน:** `0.0.2`
+*   **ผู้พัฒนา:** [DevAgentForge](https://github.com/DevAgentForge)
+*   **เทคโนโลยี:** Electron, React, Bun, และ Claude Agent SDK
+*   **สถานะ:** กำลังพัฒนาอย่างต่อเนื่องเพื่อให้เป็นเครื่องมือที่ดีที่สุดสำหรับ AI-Native Developers
 
+---
 
+## 🤝 ร่วมสนับสนุนโปรเจกต์ (Contributing)
 
-## ✨ Why Agent Cowork?
+หากคุณชอบโปรเจกต์นี้ อย่าลืมกด ⭐ **Star** บน GitHub เพื่อเป็นกำลังใจให้ทีมพัฒนา และร่วมส่ง Pull Request หรือแจ้งปัญหาได้เสมอ!
 
-Claude Code is powerful — but it **only runs in the terminal**.
-
-That means:
-- ❌ No visual feedback for complex tasks
-- ❌ Hard to track multiple sessions
-- ❌ Tool outputs are inconvenient to inspect
-
-**Agent Cowork solves these problems:**
-
-- 🖥️ Runs as a **native desktop application**
-- 🤖 Acts as your **AI collaboration partner** for any task
-- 🔁 Reuses your **existing `~/.claude/settings.json`**
-- No development environment or Claude Code installation required.
-
-
-
-## 🚀 Quick Start
-
-### Option 1: Download a Release
-
-👉 [Go to Releases](https://github.com/DevAgentForge/agent-cowork/releases)
-
-
-### Option 2: Build from Source
-
-#### Prerequisites
-
-- [Bun](https://bun.sh/) (recommended) or Node.js 22+
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed and authenticated (`claude login`)
-- Git
-
-#### Installation Steps
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/DevAgentForge/agent-cowork.git
-   cd agent-cowork
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   bun install
-   ```
-   *Note: If using npm, run `npm install`.*
-
-3. **Run in development mode:**
-   ```bash
-   bun run dev
-   ```
-
-4. **Build production binaries:**
-   If you want to create a standalone executable for your platform:
-   ```bash
-   bun run dist:mac-arm64    # macOS Apple Silicon (M1/M2/M3)
-   bun run dist:mac-x64      # macOS Intel
-   bun run dist:win          # Windows
-   bun run dist:linux        # Linux
-   ```
-
-## Example
-An example of organizing a local folder:
-
-https://github.com/user-attachments/assets/8ce58c8b-4024-4c01-82ee-f8d8ed6d4bba
-
-
-## 🛠 Development
-
-```bash
-# Start development server (hot reload)
-bun run dev
-
-# Type checking / build
-bun run build
-```
-
-
-
-## 🗺 Roadmap
-
-Planned features and improvements:
-
-- [ ] **MCP Support**: Integrate Model Context Protocol for better tool extensibility.
-- [ ] **Multi-Session View**: Improved UI for managing multiple concurrent agent sessions.
-- [ ] **Prompt Library**: Save and reuse common complex prompts.
-- [ ] **Diff Viewer**: Enhanced visualization of code changes proposed by the agent.
-- [ ] **Custom Themes**: Support for dark/light modes and personalized accent colors.
-- [ ] **Better Error Recovery**: Improved handling of network issues and API rate limits.
-
-
-
-## 🤝 Contributing
-
-Pull requests are welcome.
-
-1. Fork this repository
-2. Create your feature branch
-3. Commit your changes
-4. Open a Pull Request
-
-Please make only minimal changes.
-
-
-
-## ⭐ Final Words
-
-If you’ve ever wanted:
-
-* A persistent desktop AI collaboration partner
-* Visual insight into how Claude works
-* Convenient session management across projects
-
-This project is built for you.
-
-👉 **If it helps you, please give it a Star.**
-
-
-
-## License
-
-MIT
+---
+*ลิขสิทธิ์ © 2026 DevAgentForge - เผยแพร่ภายใต้ใบอนุญาต MIT*
